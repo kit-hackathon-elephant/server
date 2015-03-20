@@ -31,4 +31,82 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+
+  /**
+	 * Aplication helper Property
+	 * @var array helper name
+	 */
+	public $helpers = array('Html');
+
+  /**
+	 * success method
+	 *
+	 * @access private
+	 * @return array status code and message.
+	 */
+	protected function success($obj, $code = '--', $message = '--') {
+
+		// set response view
+		$this->autoRender = false;
+		$this->response->type('application/json');
+
+		// Generate response code and message
+		$status = array(
+			'code' => $code,
+			'message' => $message,
+			'condition' => "OK"
+		);
+
+		$returnObj = array(
+			'status' => $status,
+			'body' => $obj
+		);
+
+		echo json_encode($returnObj, JSON_FORCE_OBJECT);
+	}
+
+  /**
+	 * error method
+	 *
+	 * @access protected
+	 * @return array status code and message.
+	 */
+	protected function error($code = '--', $message = '--') {
+
+		// set response view
+		$this->autoRender = false;
+		$this->response->type('application/json');
+
+		// Generate response code and message
+		$status = array(
+			'status' => array(
+				'code' => $code,
+				'message' => $message,
+				'condition' => "NG",
+				'meta' => array(
+					'url' => $this->request->here,
+					'method' => $this->request->method(),
+				)
+			)
+		);
+		// If request is post
+		if ($this->request->is('post')) {
+			$status['Status']['meta']['postData'] = $this->request->input();
+		}
+		return $status;
+	}
+
+  /**
+	 * generate_token method
+	 *
+	 * return token
+	 *
+	 * @access protected
+	 * @param integer $TOKEN_LENGTH token length
+	 * @return string token
+	 */
+	protected function generate_token($LENGTH) {
+		$token = openssl_random_pseudo_bytes($LENGTH);
+		return bin2hex($token);
+	}
 }
