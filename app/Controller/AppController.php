@@ -46,9 +46,7 @@ class AppController extends Controller {
 	 */
 	protected function success($obj, $code = '--', $message = '--') {
 
-		// set response view
-		$this->autoRender = false;
-		$this->response->type('application/json');
+		$this->set_responce();
 
 		// Generate response code and message
 		$status = array(
@@ -62,7 +60,7 @@ class AppController extends Controller {
 			'body' => $obj
 		);
 
-		echo json_encode($returnObj, JSON_FORCE_OBJECT);
+		$this->object_print($returnObj);
 	}
 
   /**
@@ -73,9 +71,7 @@ class AppController extends Controller {
 	 */
 	protected function error($code = '--', $message = '--') {
 
-		// set response view
-		$this->autoRender = false;
-		$this->response->type('application/json');
+		$this->set_responce();
 
 		// Generate response code and message
 		$status = array(
@@ -93,7 +89,37 @@ class AppController extends Controller {
 		if ($this->request->is('post')) {
 			$status['status']['meta']['postData'] = $this->request->input();
 		}
-		echo json_encode($status, JSON_FORCE_OBJECT);
+
+		$this->object_print($status);
+	}
+
+	/**
+	¦* validationError method
+	 *
+	 *  @access protected
+	 *  @return array status code and message.
+	 */
+	protected function validationError($code = '--', $message = '--', $modelName, $validationError = array()) {
+
+		$this->set_responce();
+
+		// Generate response code and message
+		$status = array(
+			'status' => array(
+				'code' => $code,
+				'message' => $message,
+				'condition' => "NG",
+				'validation' => array(
+					$modelName => array()
+				)
+			)
+		);
+		//Set validationError message in $status
+		foreach ($validationError as $key => $value) {
+			$status['status']['validation'][$modelName][$key] = $value[0];
+		}
+
+		$this->object_print($status);
 	}
 
   /**
@@ -108,5 +134,28 @@ class AppController extends Controller {
 	protected function generate_token($LENGTH) {
 		$token = openssl_random_pseudo_bytes($LENGTH);
 		return bin2hex($token);
+	}
+
+	private function set_responce() {
+
+		// set response view
+		$this->autoRender = false;
+		$this->response->type('application/json');
+		$this->response->disableCache();
+
+		return true;
+	}
+
+	private function object_print($object) {
+
+		echo json_encode($object, JSON_FORCE_OBJECT);
+	}
+
+	protected function check_uuid($uuid) {
+		if ($uuid == null) {
+			throw new BadRequestException('Empty UUID');
+		}
+
+		return true;
 	}
 }
