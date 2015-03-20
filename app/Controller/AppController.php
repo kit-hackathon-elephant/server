@@ -91,9 +91,9 @@ class AppController extends Controller {
 		);
 		// If request is post
 		if ($this->request->is('post')) {
-			$status['Status']['meta']['postData'] = $this->request->input();
+			$status['status']['meta']['postData'] = $this->request->input();
 		}
-		return $status;
+		echo json_encode($status, JSON_FORCE_OBJECT);
 	}
 
   /**
