@@ -74,7 +74,7 @@ class AddProfileTable extends CakeMigration {
  *
  * @var array InserRecodes
  */
-	public $recodes = array(
+	public $recode = array(
 		'Sex' => array(
 			array('name' => '男性'),
 			array('name' => '女性'),
@@ -111,7 +111,7 @@ class AddProfileTable extends CakeMigration {
  */
 	public function after($direction) {
 		if ($direction === 'up') {
-			foreach ($this->records as $model => $records) {
+			foreach ($this->recode as $model => $records) {
 				if (!$this->updateRecords($model, $records)) {
 					return false;
 				}
