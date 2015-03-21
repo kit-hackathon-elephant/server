@@ -143,6 +143,9 @@ class AppController extends Controller {
 		$this->response->type('application/json');
 		$this->response->disableCache();
 
+		$this->header('Access-Control-Allow-Origin: *');
+		$this->header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+
 		return true;
 	}
 
