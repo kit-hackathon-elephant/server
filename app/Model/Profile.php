@@ -3,8 +3,6 @@ class Profile extends AppModel {
 
 	public $belongsTo = array('User','Sex','Type');
 
-//	public $hasOne = array('Sex','Type');
-
 	public $validate = array(
 		'type_id' => array(
 			'numeric' => array(
@@ -41,4 +39,13 @@ class Profile extends AppModel {
 			)
 		)
 	);
+
+	public function afterFind($results, $primary = false) {
+		foreach($results as $key => $result) {
+			if ($result['Profile'] != null) {
+				$results[$key]['Profile']['age'] = floor((date('Ymd') - date('Ymd',strtotime($results[$key]['Profile']['birthday'])))/10000);
+			}
+		}
+		return $results;
+	}
 }
