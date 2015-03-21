@@ -29,8 +29,8 @@ class AddGeometoryTableAndColumOptionChange extends CakeMigration {
 				),
 				'locations' => array(
 					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-					'longitude' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false),
-					'latitude' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false),
+					'longitude' => array('type' => 'double', 'null' => false, 'default' => null, 'unsigned' => false),
+					'latitude' => array('type' => 'double', 'null' => false, 'default' => null, 'unsigned' => false),
 					'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 					'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 					'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
